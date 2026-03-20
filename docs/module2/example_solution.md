@@ -225,34 +225,20 @@ CREATE TABLE IF NOT EXISTS cost_calculation_line (
 
 ## 3. Импорт Заказчики.json
 
-### Вариант 1 (рекомендуется): JSON → SQL
+### JSON → SQL
 
 Преобразуйте `Заказчики.json` в SQL и импортируйте через phpMyAdmin → **Import**:
 
 ```sql
-INSERT INTO counterparty (name, inn, address, phone, is_salesman, is_buyer) VALUES
-('ООО Ромашка', '1234567890', 'г. Москва, ул. Ленина, 1', '+7 900 000-00-01', 1, 0),
-('ИП Иванов',   NULL,         'г. Казань',                NULL,               0, 1);
+INSERT INTO counterparty (id, name, inn, address, phone, is_salesman, is_buyer) VALUES
+(1,  'ООО "Поставка"',        NULL,          'г.Пятигорск',                    '+79198634592', 1, 1),
+(2,  'ООО "Кинотеатр Квант"', '26320045123', 'г. Железноводск, ул. Мира, 123', '+79884581555', 1, 0),
+(8,  'ООО "Новый JDTO"',      '26320045111', 'г. Железноводсу',                '+79884581555', 1, 0),
+(3,  'ООО "Ромашка"',         '4140784214',  'г. Омск, ул. Строителей, 294',   '+79882584546', 0, 1),
+(9,  'ООО "Ипподром"',        '5874045632',  'г. Уфа, ул. Набережная, 37',     '+79627486389', 1, 1),
+(10, 'ООО "Ассоль"',          '2629011278',  'г. Калуга, ул. Пушкина, 94',     '+79184572398', 0, 1);
 ```
-
-### Вариант 2 (MySQL 8+): JSON_TABLE
-
-```sql
-INSERT INTO counterparty (id, name, inn, address, phone, is_salesman, is_buyer)
-SELECT jt.id, jt.name, NULLIF(jt.inn,''), NULLIF(jt.address,''), NULLIF(jt.phone,''),
-       IFNULL(jt.salesman,0), IFNULL(jt.buyer,0)
-FROM (SELECT CAST('[{"id":1,"name":"ООО Ромашка","salesman":true,"buyer":false}]' AS JSON) AS payload) t
-JOIN JSON_TABLE(t.payload, '$[*]' COLUMNS (
-  id       BIGINT       PATH '$.id',
-  name     VARCHAR(255) PATH '$.name',
-  inn      VARCHAR(32)  PATH '$.inn'      NULL ON ERROR,
-  address  VARCHAR(255) PATH '$.address'  NULL ON ERROR,
-  phone    VARCHAR(64)  PATH '$.phone'    NULL ON ERROR,
-  salesman TINYINT(1)   PATH '$.salesman' DEFAULT 0 ON EMPTY DEFAULT 0 ON ERROR,
-  buyer    TINYINT(1)   PATH '$.buyer'    DEFAULT 0 ON EMPTY DEFAULT 0 ON ERROR
-)) AS jt;
-```
-
+ 
 ---
 
 ## 4. Проверка базы данных
