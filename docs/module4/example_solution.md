@@ -85,8 +85,9 @@ DairyDemo.Auth/
 
 ```csharp
 // Временный код для получения хэша — удалить после использования
-var hash = BCrypt.Net.BCrypt.HashPassword("admin");
-MessageBox.Show(hash);
+    var hash = BCrypt.Net.BCrypt.HashPassword("user");
+    Clipboard.SetText(hash);
+    MessageBox.Show("Скопировано в буфер обмена!");
 ```
 
 Скопируйте полученный хэш и выполните в phpMyAdmin:
