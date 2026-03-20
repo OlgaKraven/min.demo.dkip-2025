@@ -265,9 +265,12 @@ public sealed class UserRepository
         cmd.CommandText = """
             UPDATE users
             SET failed_attempts = failed_attempts + 1,
-                is_locked = IF(failed_attempts + 1 >= 3, 1, 0)
+                is_locked = IF(failed_attempts >= 3, 1, 0)
             WHERE id = @id
             """;
+        // Примечание: в MySQL SET вычисляется слева направо —
+        // к моменту проверки failed_attempts уже содержит новое значение (+1).
+        // Поэтому IF(failed_attempts >= 3) правильно срабатывает на 3-й попытке.
         cmd.Parameters.AddWithValue("@id", userId);
 
         await cmd.ExecuteNonQueryAsync();
@@ -410,8 +413,9 @@ public sealed class CaptchaPuzzleControl : UserControl
     private const int TileCount = Cols * Rows; // 4
 
     // ── Поля ─────────────────────────────────────────────────────────────
-    private readonly PictureBox[] _tiles = new PictureBox[TileCount];
-    private readonly int[]        _order = new int[TileCount]; // текущее расположение
+    private readonly PictureBox[] _tiles     = new PictureBox[TileCount];
+    private readonly int[]        _order     = new int[TileCount]; // текущее расположение
+    private readonly Image?[]     _originals = new Image?[TileCount]; // исходные изображения
     private int _selectedIndex = -1; // индекс выбранного тайла (-1 = нет)
 
     // ── Свойство ─────────────────────────────────────────────────────────
@@ -468,8 +472,7 @@ public sealed class CaptchaPuzzleControl : UserControl
         for (int i = 0; i < TileCount; i++)
         {
             var path = Path.Combine(folder, $"{i + 1}.png");
-            if (File.Exists(path))
-                _tiles[i].Image = Image.FromFile(path);
+            _originals[i] = File.Exists(path) ? Image.FromFile(path) : null;
         }
         Shuffle();
     }
@@ -497,13 +500,10 @@ public sealed class CaptchaPuzzleControl : UserControl
     // ── Применить текущий порядок к PictureBox-ам ────────────────────────
     private void ApplyOrder()
     {
-        // Временный кэш изображений
-        var imgs = new Image?[TileCount];
+        // Используем _originals, а не текущие изображения тайлов —
+        // иначе после каждого свапа картинки накапливали бы смещение
         for (int i = 0; i < TileCount; i++)
-            imgs[i] = _tiles[i].Image;
-
-        for (int i = 0; i < TileCount; i++)
-            _tiles[i].Image = imgs[_order[i]];
+            _tiles[i].Image = _originals[_order[i]];
     }
 
     // ── Обработчик клика по тайлу ────────────────────────────────────────
@@ -826,12 +826,10 @@ public sealed class AdminForm : Form
         var user = GetSelectedUser();
         if (user is null) { MessageBox.Show("Выберите пользователя."); return; }
 
-        var newPwd = Microsoft.VisualBasic.Interaction.InputBox(
-            "Введите новый пароль:", "Смена пароля", "");
-        if (string.IsNullOrWhiteSpace(newPwd)) return;
+        using var dlg = new PasswordDialog();
+        if (dlg.ShowDialog(this) != DialogResult.OK || string.IsNullOrWhiteSpace(dlg.Password)) return;
 
-        var hash = PasswordService.HashPassword(newPwd);
-        await _repo.UpdatePasswordAsync(user.Id, hash);
+        await _repo.UpdatePasswordAsync(user.Id, PasswordService.HashPassword(dlg.Password));
         MessageBox.Show("Пароль изменён.", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
@@ -918,6 +916,42 @@ internal sealed class UserEditDialog : Form
         Role     = _cbRole.SelectedItem?.ToString() ?? "user";
     }
 }
+
+// ── Диалог смены пароля ───────────────────────────────────────────────────
+internal sealed class PasswordDialog : Form
+{
+    public string Password { get; private set; } = "";
+    private readonly TextBox _tbPwd = new() { Width = 200, UseSystemPasswordChar = true };
+
+    public PasswordDialog()
+    {
+        Text            = "Смена пароля";
+        Size            = new Size(280, 140);
+        StartPosition   = FormStartPosition.CenterParent;
+        FormBorderStyle = FormBorderStyle.FixedDialog;
+        MaximizeBox     = false;
+
+        var btnOk     = new Button { Text = "ОК",     DialogResult = DialogResult.OK,     Width = 80 };
+        var btnCancel = new Button { Text = "Отмена", DialogResult = DialogResult.Cancel, Width = 80 };
+        btnOk.Click  += (_, _) => Password = _tbPwd.Text;
+        AcceptButton  = btnOk;
+        CancelButton  = btnCancel;
+
+        var layout = new FlowLayoutPanel
+        {
+            Dock          = DockStyle.Fill,
+            FlowDirection = FlowDirection.TopDown,
+            Padding       = new Padding(10),
+        };
+        layout.Controls.Add(new Label { Text = "Новый пароль:", AutoSize = true });
+        layout.Controls.Add(_tbPwd);
+        var btnRow = new FlowLayoutPanel { FlowDirection = FlowDirection.LeftToRight, AutoSize = true };
+        btnRow.Controls.Add(btnOk);
+        btnRow.Controls.Add(btnCancel);
+        layout.Controls.Add(btnRow);
+        Controls.Add(layout);
+    }
+}
 ```
 
 ![Пример формы админ-панели](../assets/images/31.png)
@@ -961,6 +995,5 @@ internal static class Program
 
 [:material-download: Скачать DairyDemo.Auth.zip](../files/DairyDemo.Auth.zip){ .md-button }
 
-> ZIP содержит `.csproj`, `.sln`, `Program.cs`, `Data/`, `Services/` и заготовку `Assets/captcha/`.
-> Файлы `UserRepository.cs`, `AuthService.cs`, `CaptchaPuzzleControl.cs`, `LoginForm.cs`, `AdminForm.cs`, `UserForm.cs` необходимо создать по коду выше.
-> Добавьте 4 изображения капчи в `Assets/captcha/` (1.png–4.png) с Build Action → Content.
+> ZIP содержит все исходные файлы проекта: `DairyDemo.Auth/` со всеми `.cs` и `.csproj`, а также `users_table.sql` для создания таблицы в phpMyAdmin.
+> Единственное, что нужно добавить вручную — 4 изображения капчи в `Assets/captcha/` (1.png–4.png) с `Build Action = Content`, `Copy to Output = PreserveNewest`.
