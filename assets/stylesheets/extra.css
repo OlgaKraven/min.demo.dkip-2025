@@ -22,6 +22,9 @@
   z-index: 10;
 }
 
+.md-button{
+  background-color: #e53935;
+}
 .md-typeset blockquote
 {
     border-left: 0.3rem solid; /* цвет линии */
