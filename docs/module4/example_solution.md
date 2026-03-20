@@ -993,7 +993,7 @@ internal static class Program
 
 ## 16. Скачать исходный код проекта
 
-[:material-download: Скачать DairyDemo.Auth.zip](../files/DairyDemo.Auth.zip){ .md-button }
+[Скачать DairyDemo.Auth.zip](../files/DairyDemo.Auth.zip){ .md-button }
 
 > ZIP содержит все исходные файлы проекта: `DairyDemo.Auth/` со всеми `.cs` и `.csproj`, а также `users_table.sql` для создания таблицы в phpMyAdmin.
 > Единственное, что нужно добавить вручную — 4 изображения капчи в `Assets/captcha/` (1.png–4.png) с `Build Action = Content`, `Copy to Output = PreserveNewest`.

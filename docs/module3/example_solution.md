@@ -230,4 +230,4 @@ ORDER BY co.doc_no, i.name;
 
 ## Скачать SQL-запрос
 
-[:material-download: Скачать module3_query.sql](../files/module3_query.sql){ .md-button }
+[Скачать module3_query.sql](../files/module3_query.sql){ .md-button }

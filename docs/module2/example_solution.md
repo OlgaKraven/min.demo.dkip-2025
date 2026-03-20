@@ -281,4 +281,4 @@ SHOW CREATE TABLE customer_order_line;
 
 ## 5. Скачать готовую базу данных
 
-[:material-download: Скачать dairy_demo.sql](../files/dairy_demo.sql){ .md-button }
+[Скачать dairy_demo.sql](../files/dairy_demo.sql){ .md-button }
