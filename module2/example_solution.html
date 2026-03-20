@@ -605,21 +605,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-json-sql" class="md-nav__link">
+  <a href="#json-sql" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Вариант 1 (рекомендуется): JSON → SQL
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-mysql-8-json_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Вариант 2 (MySQL 8+): JSON_TABLE
+        JSON → SQL
       
     </span>
   </a>
@@ -1238,21 +1227,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-json-sql" class="md-nav__link">
+  <a href="#json-sql" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Вариант 1 (рекомендуется): JSON → SQL
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-mysql-8-json_table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Вариант 2 (MySQL 8+): JSON_TABLE
+        JSON → SQL
       
     </span>
   </a>
@@ -1499,26 +1477,15 @@
 </code></pre></div>
 <hr>
 <h2 id="3-json">3. Импорт Заказчики.json</h2>
-<h3 id="1-json-sql">Вариант 1 (рекомендуется): JSON → SQL</h3>
+<h3 id="json-sql">JSON → SQL</h3>
 <p>Преобразуйте <code>Заказчики.json</code> в SQL и импортируйте через phpMyAdmin → <strong>Import</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">counterparty</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">inn</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="p">,</span><span class="w"> </span><span class="n">phone</span><span class="p">,</span><span class="w"> </span><span class="n">is_salesman</span><span class="p">,</span><span class="w"> </span><span class="n">is_buyer</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
-<span class="p">(</span><span class="s1">'ООО Ромашка'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1234567890'</span><span class="p">,</span><span class="w"> </span><span class="s1">'г. Москва, ул. Ленина, 1'</span><span class="p">,</span><span class="w"> </span><span class="s1">'+7 900 000-00-01'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="p">(</span><span class="s1">'ИП Иванов'</span><span class="p">,</span><span class="w">   </span><span class="k">NULL</span><span class="p">,</span><span class="w">         </span><span class="s1">'г. Казань'</span><span class="p">,</span><span class="w">                </span><span class="k">NULL</span><span class="p">,</span><span class="w">               </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-</code></pre></div>
-<h3 id="2-mysql-8-json_table">Вариант 2 (MySQL 8+): JSON_TABLE</h3>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">counterparty</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">inn</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="p">,</span><span class="w"> </span><span class="n">phone</span><span class="p">,</span><span class="w"> </span><span class="n">is_salesman</span><span class="p">,</span><span class="w"> </span><span class="n">is_buyer</span><span class="p">)</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">jt</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">jt</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="k">NULLIF</span><span class="p">(</span><span class="n">jt</span><span class="p">.</span><span class="n">inn</span><span class="p">,</span><span class="s1">''</span><span class="p">),</span><span class="w"> </span><span class="k">NULLIF</span><span class="p">(</span><span class="n">jt</span><span class="p">.</span><span class="n">address</span><span class="p">,</span><span class="s1">''</span><span class="p">),</span><span class="w"> </span><span class="k">NULLIF</span><span class="p">(</span><span class="n">jt</span><span class="p">.</span><span class="n">phone</span><span class="p">,</span><span class="s1">''</span><span class="p">),</span>
-<span class="w">       </span><span class="n">IFNULL</span><span class="p">(</span><span class="n">jt</span><span class="p">.</span><span class="n">salesman</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">IFNULL</span><span class="p">(</span><span class="n">jt</span><span class="p">.</span><span class="n">buyer</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">CAST</span><span class="p">(</span><span class="s1">'[{"id":1,"name":"ООО Ромашка","salesman":true,"buyer":false}]'</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">JSON</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
-<span class="k">JOIN</span><span class="w"> </span><span class="n">JSON_TABLE</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">payload</span><span class="p">,</span><span class="w"> </span><span class="s1">'$[*]'</span><span class="w"> </span><span class="n">COLUMNS</span><span class="w"> </span><span class="p">(</span>
-<span class="w">  </span><span class="n">id</span><span class="w">       </span><span class="nb">BIGINT</span><span class="w">       </span><span class="n">PATH</span><span class="w"> </span><span class="s1">'$.id'</span><span class="p">,</span>
-<span class="w">  </span><span class="n">name</span><span class="w">     </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="n">PATH</span><span class="w"> </span><span class="s1">'$.name'</span><span class="p">,</span>
-<span class="w">  </span><span class="n">inn</span><span class="w">      </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w">  </span><span class="n">PATH</span><span class="w"> </span><span class="s1">'$.inn'</span><span class="w">      </span><span class="k">NULL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ERROR</span><span class="p">,</span>
-<span class="w">  </span><span class="n">address</span><span class="w">  </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="n">PATH</span><span class="w"> </span><span class="s1">'$.address'</span><span class="w">  </span><span class="k">NULL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ERROR</span><span class="p">,</span>
-<span class="w">  </span><span class="n">phone</span><span class="w">    </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w">  </span><span class="n">PATH</span><span class="w"> </span><span class="s1">'$.phone'</span><span class="w">    </span><span class="k">NULL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ERROR</span><span class="p">,</span>
-<span class="w">  </span><span class="n">salesman</span><span class="w"> </span><span class="n">TINYINT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">   </span><span class="n">PATH</span><span class="w"> </span><span class="s1">'$.salesman'</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">EMPTY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ERROR</span><span class="p">,</span>
-<span class="w">  </span><span class="n">buyer</span><span class="w">    </span><span class="n">TINYINT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">   </span><span class="n">PATH</span><span class="w"> </span><span class="s1">'$.buyer'</span><span class="w">    </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">EMPTY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ERROR</span>
-<span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">jt</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">counterparty</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">inn</span><span class="p">,</span><span class="w"> </span><span class="n">address</span><span class="p">,</span><span class="w"> </span><span class="n">phone</span><span class="p">,</span><span class="w"> </span><span class="n">is_salesman</span><span class="p">,</span><span class="w"> </span><span class="n">is_buyer</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w">  </span><span class="s1">'ООО "Поставка"'</span><span class="p">,</span><span class="w">        </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="s1">'г.Пятигорск'</span><span class="p">,</span><span class="w">                    </span><span class="s1">'+79198634592'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w">  </span><span class="s1">'ООО "Кинотеатр Квант"'</span><span class="p">,</span><span class="w"> </span><span class="s1">'26320045123'</span><span class="p">,</span><span class="w"> </span><span class="s1">'г. Железноводск, ул. Мира, 123'</span><span class="p">,</span><span class="w"> </span><span class="s1">'+79884581555'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w">  </span><span class="s1">'ООО "Новый JDTO"'</span><span class="p">,</span><span class="w">      </span><span class="s1">'26320045111'</span><span class="p">,</span><span class="w"> </span><span class="s1">'г. Железноводсу'</span><span class="p">,</span><span class="w">                </span><span class="s1">'+79884581555'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w">  </span><span class="s1">'ООО "Ромашка"'</span><span class="p">,</span><span class="w">         </span><span class="s1">'4140784214'</span><span class="p">,</span><span class="w">  </span><span class="s1">'г. Омск, ул. Строителей, 294'</span><span class="p">,</span><span class="w">   </span><span class="s1">'+79882584546'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="w">  </span><span class="s1">'ООО "Ипподром"'</span><span class="p">,</span><span class="w">        </span><span class="s1">'5874045632'</span><span class="p">,</span><span class="w">  </span><span class="s1">'г. Уфа, ул. Набережная, 37'</span><span class="p">,</span><span class="w">     </span><span class="s1">'+79627486389'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="s1">'ООО "Ассоль"'</span><span class="p">,</span><span class="w">          </span><span class="s1">'2629011278'</span><span class="p">,</span><span class="w">  </span><span class="s1">'г. Калуга, ул. Пушкина, 94'</span><span class="p">,</span><span class="w">     </span><span class="s1">'+79184572398'</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
 </code></pre></div>
 <hr>
 <h2 id="4">4. Проверка базы данных</h2>
