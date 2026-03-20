@@ -203,17 +203,43 @@ FK: `item_id` → `item(id)` ON UPDATE CASCADE ON DELETE RESTRICT
 
 ### 3.6. PRODUCTION_ORDER, PRODUCTION_PRODUCT_LINE, PRODUCTION_MATERIAL_LINE
 
+ 
+| Имя | Тип | Null |
+|---|---|---|
+| id | BIGINT(20) | ☐ |
+| doc_no | VARCHAR(64) | ☐ |
+| doc_date | DATE | ☑ |
+| manufacturer_id | BIGINT(20) | ☑ |
+| note | TEXT | ☑ |
+
+
    ![PRODUCTION_ORDER](../assets/images/65.png)
 
    /// caption
    Рисунок 16 – Таблица `production_order`
    ///
 
+| Имя | Тип | Null |
+|---|---|---|
+| id | BIGINT(20) | ☐ |
+| production_order_id | BIGINT(20) | ☐ |
+| product_item_id | BIGINT(20) | ☐ |
+| qty | DECIMAL(12,3) | ☐ |
+| unit | VARCHAR(32) | ☑ |
+
+
    ![PRODUCTION_PRODUCT_LINE](../assets/images/66.png)
 
    /// caption
    Рисунок 17 – Таблица `production_product_line`
    ///
+| Имя | Тип | Null |
+|---|---|---|
+| id | BIGINT(20) | ☐ |
+| production_order_id | BIGINT(20) | ☐ |
+| material_item_id | BIGINT(20) | ☐ |
+| qty | DECIMAL(12,3) | ☐ |
+| unit | VARCHAR(32) | ☑ |
 
    ![PRODUCTION_MATERIAL_LINE](../assets/images/67.png)
 
@@ -225,11 +251,33 @@ FK: `item_id` → `item(id)` ON UPDATE CASCADE ON DELETE RESTRICT
 
 ### 3.7. CUSTOMER_ORDER и CUSTOMER_ORDER_LINE
 
+
+| Имя | Тип | Null |
+|---|---|---|
+| id | BIGINT(20) | ☐ |
+| doc_no | VARCHAR(64) | ☐ |
+| doc_date | DATE | ☑ |
+| executor_id | BIGINT(20) | ☑ |
+| customer_id | BIGINT(20) | ☑ |
+| total_amount | DECIMAL(12,2) | ☑ |
+
    ![CUSTOMER_ORDER](../assets/images/68.png)
 
    /// caption
    Рисунок 19 – Таблица `customer_order`
    ///
+
+**customer_order_line** (Image 5)
+
+| Имя | Тип | Null |
+|---|---|---|
+| id | BIGINT(20) | ☐ |
+| customer_order_id | BIGINT(20) | ☐ |
+| product_item_id | BIGINT(20) | ☐ |
+| qty | DECIMAL(12,3) | ☐ |
+| unit | VARCHAR(32) | ☑ |
+| unit_price | DECIMAL(12,2) | ☑ |
+| line_amount | DECIMAL(12,2) | ☑ |
 
    ![CUSTOMER_ORDER_LINE](../assets/images/69.png)
 
@@ -241,11 +289,31 @@ FK: `item_id` → `item(id)` ON UPDATE CASCADE ON DELETE RESTRICT
 
 ### 3.8. COST_CALCULATION и COST_CALCULATION_LINE
 
+
+| Имя | Тип | Null |
+|---|---|---|
+| id | BIGINT(20) | ☐ |
+| calc_date | DATE | ☑ |
+| product_item_id | BIGINT(20) | ☐ |
+| product_qty | DECIMAL(12,3) | ☐ |
+| total_cost | DECIMAL(12,2) | ☑ |
+
    ![COST_CALCULATION](../assets/images/70.png)
 
    /// caption
    Рисунок 21 – Таблица `cost_calculation`
    ///
+
+
+| Имя | Тип | Null |
+|---|---|---|
+| id | BIGINT(20) | ☐ |
+| cost_calculation_id | BIGINT(20) | ☐ |
+| material_item_id | BIGINT(20) | ☐ |
+| qty | DECIMAL(12,3) | ☐ |
+| unit | VARCHAR(32) | ☑ |
+| unit_cost | DECIMAL(12,2) | ☑ |
+| line_cost | DECIMAL(12,2) | ☑ |
 
    ![COST_CALCULATION_LINE](../assets/images/71.png)
 
@@ -411,4 +479,4 @@ name,inn,address,phone,is_salesman,is_buyer
 
 ## 7. Скачать готовую базу данных
 
-[:material-download: Скачать dairy_demo.sql](../files/dairy_demo.sql){ .md-button }
+[ Скачать dairy_demo.sql](../files/dairy_demo.sql){ .md-button }
