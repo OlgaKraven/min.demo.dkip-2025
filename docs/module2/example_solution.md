@@ -251,16 +251,11 @@ SHOW CREATE TABLE customer_order_line;
 
 После создания убедитесь, что все таблицы созданы и FK присутствуют.
 
-![Проверка базы данных](../assets/images/11.png)
-
-/// caption
-Рисунок 1 – Проверка таблиц в phpMyAdmin
-///
 
 ![ER-диаграмма в Designer](../assets/images/13.png)
 
 /// caption
-Рисунок 2 – ER-диаграмма через Designer phpMyAdmin
+Рисунок 1 – ER-диаграмма через Designer phpMyAdmin
 ///
 
 ---
