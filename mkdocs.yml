@@ -32,7 +32,8 @@ nav:
     - Пример решения: module3/example_solution.md
   - Модуль 4. Разработка информационной системы:
     - Описание задания: module4/index.md
-    - Пример решения: module4/example_solution.md
+    - Пример решения (код): module4/example_solution.md
+    - Пример решения (дизайнер): module4/example_solution_designer.md
   - Модуль 5. Разработка проектной документации:
     - Описание задания: module5/index.md
     - Пример пояснительной записки: module5/example_solution.md
